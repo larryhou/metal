@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6B09BB6123FB0183002AB46F /* shader.metal in Sources */ = {isa = PBXBuildFile; fileRef = 6B09BB5F23FB0183002AB46F /* shader.metal */; };
+		6B09BB6223FB0183002AB46F /* MetalRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B09BB6023FB0183002AB46F /* MetalRenderer.swift */; };
 		6B28FF8A23FADB5F00E6CBE9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B28FF8923FADB5F00E6CBE9 /* AppDelegate.swift */; };
 		6B28FF8C23FADB5F00E6CBE9 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B28FF8B23FADB5F00E6CBE9 /* SceneDelegate.swift */; };
 		6B28FF8E23FADB5F00E6CBE9 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B28FF8D23FADB5F00E6CBE9 /* ViewController.swift */; };
@@ -14,8 +16,6 @@
 		6B28FF9323FADB6000E6CBE9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6B28FF9223FADB6000E6CBE9 /* Assets.xcassets */; };
 		6B28FF9623FADB6000E6CBE9 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6B28FF9423FADB6000E6CBE9 /* LaunchScreen.storyboard */; };
 		6B28FFA123FADB6000E6CBE9 /* SamplingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B28FFA023FADB6000E6CBE9 /* SamplingTests.swift */; };
-		6B28FFAE23FADB8C00E6CBE9 /* shader.metal in Sources */ = {isa = PBXBuildFile; fileRef = 6B28FFAC23FADB8C00E6CBE9 /* shader.metal */; };
-		6B28FFAF23FADB8C00E6CBE9 /* MetalRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B28FFAD23FADB8C00E6CBE9 /* MetalRenderer.swift */; };
 		6B28FFB623FADBCD00E6CBE9 /* body.mesh in Resources */ = {isa = PBXBuildFile; fileRef = 6B28FFB123FADBCC00E6CBE9 /* body.mesh */; };
 		6B28FFB723FADBCD00E6CBE9 /* mask.mesh in Resources */ = {isa = PBXBuildFile; fileRef = 6B28FFB223FADBCC00E6CBE9 /* mask.mesh */; };
 		6B28FFB823FADBCD00E6CBE9 /* diffuse.png in Resources */ = {isa = PBXBuildFile; fileRef = 6B28FFB323FADBCC00E6CBE9 /* diffuse.png */; };
@@ -35,6 +35,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		6B09BB5F23FB0183002AB46F /* shader.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; path = shader.metal; sourceTree = "<group>"; };
+		6B09BB6023FB0183002AB46F /* MetalRenderer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MetalRenderer.swift; sourceTree = "<group>"; };
 		6B28FF8623FADB5F00E6CBE9 /* Sampling.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Sampling.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6B28FF8923FADB5F00E6CBE9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		6B28FF8B23FADB5F00E6CBE9 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -46,8 +48,6 @@
 		6B28FF9C23FADB6000E6CBE9 /* SamplingTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SamplingTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		6B28FFA023FADB6000E6CBE9 /* SamplingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SamplingTests.swift; sourceTree = "<group>"; };
 		6B28FFA223FADB6000E6CBE9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		6B28FFAC23FADB8C00E6CBE9 /* shader.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; path = shader.metal; sourceTree = "<group>"; };
-		6B28FFAD23FADB8C00E6CBE9 /* MetalRenderer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MetalRenderer.swift; sourceTree = "<group>"; };
 		6B28FFB123FADBCC00E6CBE9 /* body.mesh */ = {isa = PBXFileReference; lastKnownFileType = file; path = body.mesh; sourceTree = "<group>"; };
 		6B28FFB223FADBCC00E6CBE9 /* mask.mesh */ = {isa = PBXFileReference; lastKnownFileType = file; path = mask.mesh; sourceTree = "<group>"; };
 		6B28FFB323FADBCC00E6CBE9 /* diffuse.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = diffuse.png; sourceTree = "<group>"; };
@@ -74,6 +74,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		6B09BB5E23FB0183002AB46F /* Metal */ = {
+			isa = PBXGroup;
+			children = (
+				6B09BB5F23FB0183002AB46F /* shader.metal */,
+				6B09BB6023FB0183002AB46F /* MetalRenderer.swift */,
+			);
+			name = Metal;
+			path = Sampling/Metal;
+			sourceTree = SOURCE_ROOT;
+		};
 		6B28FF7D23FADB5F00E6CBE9 = {
 			isa = PBXGroup;
 			children = (
@@ -95,8 +105,8 @@
 		6B28FF8823FADB5F00E6CBE9 /* Sampling */ = {
 			isa = PBXGroup;
 			children = (
+				6B09BB5E23FB0183002AB46F /* Metal */,
 				6B28FFB023FADBB300E6CBE9 /* Model */,
-				6B28FFAB23FADB8C00E6CBE9 /* Metal */,
 				6B28FF8923FADB5F00E6CBE9 /* AppDelegate.swift */,
 				6B28FF8B23FADB5F00E6CBE9 /* SceneDelegate.swift */,
 				6B28FF8D23FADB5F00E6CBE9 /* ViewController.swift */,
@@ -115,16 +125,6 @@
 				6B28FFA223FADB6000E6CBE9 /* Info.plist */,
 			);
 			path = SamplingTests;
-			sourceTree = "<group>";
-		};
-		6B28FFAB23FADB8C00E6CBE9 /* Metal */ = {
-			isa = PBXGroup;
-			children = (
-				6B28FFAC23FADB8C00E6CBE9 /* shader.metal */,
-				6B28FFAD23FADB8C00E6CBE9 /* MetalRenderer.swift */,
-			);
-			name = Metal;
-			path = ../../HelloTriangle/HelloTriangle/Metal;
 			sourceTree = "<group>";
 		};
 		6B28FFB023FADBB300E6CBE9 /* Model */ = {
@@ -254,12 +254,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6B28FFAE23FADB8C00E6CBE9 /* shader.metal in Sources */,
 				6B28FF8E23FADB5F00E6CBE9 /* ViewController.swift in Sources */,
 				6B28FF8A23FADB5F00E6CBE9 /* AppDelegate.swift in Sources */,
+				6B09BB6223FB0183002AB46F /* MetalRenderer.swift in Sources */,
 				6B28FFBC23FADE1000E6CBE9 /* ModelFile.swift in Sources */,
 				6B28FF8C23FADB5F00E6CBE9 /* SceneDelegate.swift in Sources */,
-				6B28FFAF23FADB8C00E6CBE9 /* MetalRenderer.swift in Sources */,
+				6B09BB6123FB0183002AB46F /* shader.metal in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
