@@ -34,6 +34,7 @@ class VertexAttribute<T>
     private(set) var directs: UnsafeBufferPointer<T>?
     private(set) var indices: UnsafeBufferPointer<Int32>?
     
+    // extend for metal
     private(set) var controls: UnsafeMutableBufferPointer<T>?
     
     init(mapping: MappingMode)
@@ -79,6 +80,14 @@ class MeshModel
     
     private(set) var triangles: UnsafeBufferPointer<Int32>?
     private(set) var vertices: MeshVertices?
+    
+    // extend for metal
+    private(set) var indexing: UnsafeMutableBufferPointer<Int16>?
+    
+    deinit
+    {
+        indexing?.deallocate()
+    }
     
     init(name: String)
     {
@@ -191,6 +200,18 @@ class MeshModel
         
         convert(self.vertices!, attribute: self.uvs)
         convert(self.vertices!, attribute: self.colors)
+        
+        // index buffer
+        if let triangles = self.triangles, let polygonVertices = self.vertices?.polygonVertices
+        {
+            let buffer = UnsafeMutableBufferPointer<Int16>.allocate(capacity: triangles.count)
+            for n in 0..<triangles.count
+            {
+                let index = polygonVertices[Int(triangles[n])]
+                buffer[n] = Int16(index)
+            }
+            self.indexing = buffer
+        }
     }
     
     private func convert<T>(_ vertices: MeshVertices, attribute: VertexAttribute<T>?)
@@ -201,12 +222,10 @@ class MeshModel
             attribute.mapping == .byPolygonVertex else { return }
         let buffer = UnsafeMutableBufferPointer<T>.allocate(capacity: vertices.controlVertices.count)
         attribute.set(controls: buffer)
-        guard let base = buffer.baseAddress else { return }
-        
         for i in 0..<indices.count
         {
             let offset = Int(vertices.polygonVertices[i])
-            base[offset] = directs[Int(indices[i])]
+            buffer[offset] = directs[Int(indices[i])]
         }
     }
     
