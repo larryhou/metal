@@ -23,30 +23,84 @@ extension UnsafeRawPointer
     }
 }
 
+enum MappingMode: UInt8
+{
+    case none = 0, byControlVertex, byPolygonVertex, byPolygon, byEdge, same
+}
+
+class VertexAttribute<T>
+{
+    let mapping: MappingMode
+    var directs: UnsafeBufferPointer<T>?
+    var indices: UnsafeBufferPointer<Int32>?
+    
+    init(mapping: MappingMode)
+    {
+        self.mapping = mapping
+    }
+    
+    func set(directs: UnsafeBufferPointer<T>, indices: UnsafeBufferPointer<Int32>?)
+    {
+        self.directs = directs
+        self.indices = indices
+    }
+}
+
+struct MeshVertices
+{
+    let controlVertices: UnsafeBufferPointer<Float4>
+    let polygonVertices: UnsafeBufferPointer<Int32>
+}
+
 class MeshFile
 {
     let name: String
+    let bundle: String?
     
     private var data: Data?
     private var address: UnsafeRawPointer?
     
-    private(set) var tangents: (UnsafeBufferPointer<Float4>, UnsafeBufferPointer<Int32>?)?
-    private(set) var normals: (UnsafeBufferPointer<Float4>, UnsafeBufferPointer<Int32>?)?
-    private(set) var colors: (UnsafeBufferPointer<Float4>, UnsafeBufferPointer<Int32>?)?
-    private(set) var uvs: (UnsafeBufferPointer<Float2>, UnsafeBufferPointer<Int32>?)?
+    private(set) var tangents: VertexAttribute<Float4>?
+    private(set) var normals: VertexAttribute<Float4>?
+    private(set) var colors: VertexAttribute<Float4>?
+    private(set) var uvs: VertexAttribute<Float2>?
     
     private(set) var triangles: UnsafeBufferPointer<Int32>?
-    private(set) var vertices: (UnsafeBufferPointer<Float4>, UnsafeBufferPointer<Int32>)?
+    private(set) var vertices: MeshVertices?
     
     init(name: String)
     {
         self.name = name
+        self.bundle = nil
         if let path = Bundle.main.path(forResource: name, ofType: "mesh")
         {
             if let data = try? Data(contentsOf: URL(fileURLWithPath: path))
             {
                 self.data = data
                 data.withUnsafeBytes { self.address = $0.baseAddress }
+            }
+        }
+        
+        load()
+    }
+    
+    init(bundle b: String, name: String)
+    {
+        self.bundle = b
+        self.name = name
+        
+        if let path = Bundle.main.path(forResource: b, ofType: "bundle")
+        {
+            if let target = Bundle(path: path)
+            {
+                if let asset = target.path(forResource: name, ofType: "mesh")
+                {
+                    if let data = try? Data(contentsOf: URL(fileURLWithPath: asset))
+                    {
+                        self.data = data
+                        data.withUnsafeBytes { self.address = $0.baseAddress }
+                    }
+                }
             }
         }
         
@@ -90,7 +144,7 @@ class MeshFile
         
         pti = ptr.bindMemory(to: Int32.self, capacity: numPolygonVertices)
         let polygonVertices = UnsafeBufferPointer<Int32>(start: pti, count: numPolygonVertices)
-        self.vertices = (controlVertices, polygonVertices)
+        self.vertices = MeshVertices(controlVertices: controlVertices, polygonVertices: polygonVertices)
         ptr += MemoryLayout<Int32>.stride * numPolygonVertices;
         
         assert(ptr++.load(as: UInt8.self) == 90) // Z
@@ -110,17 +164,22 @@ class MeshFile
         }
     }
     
-    private func load<T>(_ ptr: inout UnsafeRawPointer)->(UnsafeBufferPointer<T>, UnsafeBufferPointer<Int32>?)
+    private func load<T>(_ ptr: inout UnsafeRawPointer)->VertexAttribute<T>
     {
         // DirectArray
         assert(ptr++.load(as: UInt8.self) == 100) // d
+        
+        let mapping = MappingMode(rawValue: ptr++.load(as: UInt8.self))
+        assert(mapping != nil)
+        
+        let attribute = VertexAttribute<T>(mapping: mapping!)
         
         var pti = ptr.bindMemory(to: Int32.self, capacity: 1)
         let numValues = Int(pti.pointee)
         ptr += 4
         
         let ptv = ptr.bindMemory(to: T.self, capacity: numValues)
-        let values = UnsafeBufferPointer<T>(start: ptv, count: numValues)
+        let directs = UnsafeBufferPointer<T>(start: ptv, count: numValues)
         ptr += MemoryLayout<T>.stride * numValues
         
         var indices: UnsafeBufferPointer<Int32>?
@@ -136,8 +195,8 @@ class MeshFile
             indices = UnsafeBufferPointer<Int32>(start: pti, count: numIndices)
             ptr += MemoryLayout<Int32>.stride * numIndices
         }
-        
-        return (values, indices)
+        attribute.set(directs: directs, indices: indices)
+        return attribute
     }
     
 }
