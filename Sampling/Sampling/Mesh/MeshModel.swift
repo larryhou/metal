@@ -31,8 +31,10 @@ enum MappingMode: UInt8
 class VertexAttribute<T>
 {
     let mapping: MappingMode
-    var directs: UnsafeBufferPointer<T>?
-    var indices: UnsafeBufferPointer<Int32>?
+    private(set) var directs: UnsafeBufferPointer<T>?
+    private(set) var indices: UnsafeBufferPointer<Int32>?
+    
+    private(set) var controls: UnsafeMutableBufferPointer<T>?
     
     init(mapping: MappingMode)
     {
@@ -44,6 +46,16 @@ class VertexAttribute<T>
         self.directs = directs
         self.indices = indices
     }
+    
+    func set(controls: UnsafeMutableBufferPointer<T>)
+    {
+        self.controls = controls
+    }
+    
+    deinit
+    {
+        controls?.deallocate()
+    }
 }
 
 struct MeshVertices
@@ -52,7 +64,7 @@ struct MeshVertices
     let polygonVertices: UnsafeBufferPointer<Int32>
 }
 
-class MeshFile
+class MeshModel
 {
     let name: String
     let bundle: String?
@@ -107,6 +119,16 @@ class MeshFile
         load()
     }
     
+    private func align(_ ptr:inout UnsafeRawPointer, base:UnsafeRawPointer, size: Int = 8)
+    {
+        let position = ptr - base
+        let mode = position % size
+        if mode != 0
+        {
+            ptr += size - mode
+        }
+    }
+    
     private func load()
     {
         guard let data = self.data, let address = self.address else {return}
@@ -123,6 +145,7 @@ class MeshFile
         let numVertices = Int(pti.pointee)
         ptr += 4
         
+        align(&ptr, base: address)
         let ptv = ptr.bindMemory(to: Float4.self, capacity: numVertices)
         let controlVertices = UnsafeBufferPointer<Float4>(start: ptv, count: numVertices);
         ptr += MemoryLayout<Float4>.stride * numVertices
@@ -133,7 +156,9 @@ class MeshFile
         let numTriangles = Int(pti.pointee)
         ptr += 4
         
-        self.triangles = UnsafeBufferPointer<Int32>(start: pti + 1, count: numTriangles * 3)
+        align(&ptr, base: address)
+        pti = ptr.bindMemory(to: Int32.self, capacity: numTriangles * 3)
+        self.triangles = UnsafeBufferPointer<Int32>(start: pti, count: numTriangles * 3)
         ptr += MemoryLayout<Int32>.stride * numTriangles * 3
         
         // polygon vertices
@@ -142,6 +167,7 @@ class MeshFile
         let numPolygonVertices = Int(pti.pointee)
         ptr += 4
         
+        align(&ptr, base: address)
         pti = ptr.bindMemory(to: Int32.self, capacity: numPolygonVertices)
         let polygonVertices = UnsafeBufferPointer<Int32>(start: pti, count: numPolygonVertices)
         self.vertices = MeshVertices(controlVertices: controlVertices, polygonVertices: polygonVertices)
@@ -155,20 +181,39 @@ class MeshFile
         {
             let type = ptr++.load(as: UInt8.self)
             switch type {
-            case 110: self.normals  = load(&ptr) // n: normals
-            case 117: self.uvs      = load(&ptr) // u: uvs
-            case 116: self.tangents = load(&ptr) // t: tangents
-            case  99: self.colors   = load(&ptr) // c: colors
+            case 110: self.normals  = load(&ptr, base: address) // n: normals
+            case 117: self.uvs      = load(&ptr, base: address) // u: uvs
+            case 116: self.tangents = load(&ptr, base: address) // t: tangents
+            case  99: self.colors   = load(&ptr, base: address) // c: colors
             default: break
             }
         }
+        
+        convert(self.vertices!, attribute: self.uvs)
+        convert(self.vertices!, attribute: self.colors)
     }
     
-    private func load<T>(_ ptr: inout UnsafeRawPointer)->VertexAttribute<T>
+    private func convert<T>(_ vertices: MeshVertices, attribute: VertexAttribute<T>?)
+    {
+        guard let attribute = attribute,
+            let indices = attribute.indices,
+            let directs = attribute.directs,
+            attribute.mapping == .byPolygonVertex else { return }
+        let buffer = UnsafeMutableBufferPointer<T>.allocate(capacity: vertices.controlVertices.count)
+        attribute.set(controls: buffer)
+        guard let base = buffer.baseAddress else { return }
+        
+        for i in 0..<indices.count
+        {
+            let offset = Int(vertices.polygonVertices[i])
+            base[offset] = directs[Int(indices[i])]
+        }
+    }
+    
+    private func load<T>(_ ptr: inout UnsafeRawPointer, base address: UnsafeRawPointer)->VertexAttribute<T>
     {
         // DirectArray
         assert(ptr++.load(as: UInt8.self) == 100) // d
-        
         let mapping = MappingMode(rawValue: ptr++.load(as: UInt8.self))
         assert(mapping != nil)
         
@@ -178,6 +223,7 @@ class MeshFile
         let numValues = Int(pti.pointee)
         ptr += 4
         
+        align(&ptr, base: address)
         let ptv = ptr.bindMemory(to: T.self, capacity: numValues)
         let directs = UnsafeBufferPointer<T>(start: ptv, count: numValues)
         ptr += MemoryLayout<T>.stride * numValues
@@ -191,6 +237,7 @@ class MeshFile
             let numIndices = Int(pti.pointee)
             ptr += 4
             
+            align(&ptr, base: address)
             pti = ptr.bindMemory(to: Int32.self, capacity: numIndices)
             indices = UnsafeBufferPointer<Int32>(start: pti, count: numIndices)
             ptr += MemoryLayout<Int32>.stride * numIndices

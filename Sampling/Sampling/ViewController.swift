@@ -14,7 +14,7 @@ class ViewController: UIViewController
     {
         super.viewDidLoad()
         
-        let model = MeshFile(bundle: "Piggy", name: "s3")
+        let model = MeshModel(bundle: "Punching", name: "body")
     }
 
 }

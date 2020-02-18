@@ -18,7 +18,7 @@
 		6B28FF9323FADB6000E6CBE9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6B28FF9223FADB6000E6CBE9 /* Assets.xcassets */; };
 		6B28FF9623FADB6000E6CBE9 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6B28FF9423FADB6000E6CBE9 /* LaunchScreen.storyboard */; };
 		6B28FFA123FADB6000E6CBE9 /* SamplingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B28FFA023FADB6000E6CBE9 /* SamplingTests.swift */; };
-		6B28FFBC23FADE1000E6CBE9 /* MeshFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B28FFBB23FADE1000E6CBE9 /* MeshFile.swift */; };
+		6B28FFBC23FADE1000E6CBE9 /* MeshModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B28FFBB23FADE1000E6CBE9 /* MeshModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -47,7 +47,7 @@
 		6B28FF9C23FADB6000E6CBE9 /* SamplingTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SamplingTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		6B28FFA023FADB6000E6CBE9 /* SamplingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SamplingTests.swift; sourceTree = "<group>"; };
 		6B28FFA223FADB6000E6CBE9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		6B28FFBB23FADE1000E6CBE9 /* MeshFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeshFile.swift; sourceTree = "<group>"; };
+		6B28FFBB23FADE1000E6CBE9 /* MeshModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeshModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -125,7 +125,7 @@
 		6B28FFB023FADBB300E6CBE9 /* Mesh */ = {
 			isa = PBXGroup;
 			children = (
-				6B28FFBB23FADE1000E6CBE9 /* MeshFile.swift */,
+				6B28FFBB23FADE1000E6CBE9 /* MeshModel.swift */,
 			);
 			path = Mesh;
 			sourceTree = "<group>";
@@ -245,7 +245,7 @@
 				6B28FF8E23FADB5F00E6CBE9 /* ViewController.swift in Sources */,
 				6B28FF8A23FADB5F00E6CBE9 /* AppDelegate.swift in Sources */,
 				6B09BB6223FB0183002AB46F /* MetalRenderer.swift in Sources */,
-				6B28FFBC23FADE1000E6CBE9 /* MeshFile.swift in Sources */,
+				6B28FFBC23FADE1000E6CBE9 /* MeshModel.swift in Sources */,
 				6B28FF8C23FADB5F00E6CBE9 /* SceneDelegate.swift in Sources */,
 				6B09BB6123FB0183002AB46F /* shader.metal in Sources */,
 			);

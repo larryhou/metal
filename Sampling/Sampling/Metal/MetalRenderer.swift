@@ -10,6 +10,7 @@ import MetalKit
 import simd
 
 typealias Float2 = SIMD2<Float>
+typealias Float3 = SIMD4<Float>
 typealias Float4 = SIMD4<Float>
 
 struct Vertex
@@ -32,6 +33,7 @@ class MetalRenderer: NSObject, MTKViewDelegate
     var device: MTLDevice?
     var pipelineState: MTLRenderPipelineState?
     var commandQueue: MTLCommandQueue?
+    var model: MeshModel?
     
     var viewport = Float2()
     
@@ -49,6 +51,7 @@ class MetalRenderer: NSObject, MTKViewDelegate
         pipelineState = try? device?.makeRenderPipelineState(descriptor: descriptor)
         commandQueue = device?.makeCommandQueue()
         
+        model = MeshModel(bundle: "Piggy", name: "cloth")
         super.init()
         
         assert(pipelineState != nil)
@@ -76,6 +79,11 @@ class MetalRenderer: NSObject, MTKViewDelegate
             commandEncoder.label = "MTLRenderCommandEncoder"
             commandEncoder.setViewport(MTLViewport(originX: 0, originY: 0, width: Double(viewport.x), height: Double(viewport.y), znear: 0, zfar: 1))
             commandEncoder.setRenderPipelineState(pipelineState)
+            
+            if let vertices = model?.vertices
+            {
+                
+            }
             
             commandEncoder.setVertexBytes(&vertices, length: MemoryLayout<Vertex>.stride * vertices.count, index: 0)
             commandEncoder.setVertexBytes(&viewport, length: MemoryLayout<Float2>.stride, index: 1)
