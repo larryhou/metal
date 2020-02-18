@@ -14,7 +14,7 @@ class ViewController: UIViewController
     {
         super.viewDidLoad()
         
-        let model = ModelFile(name: "mask")
+        let model = MeshFile(name: "body")
     }
 
 }

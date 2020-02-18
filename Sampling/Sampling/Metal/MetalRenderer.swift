@@ -12,9 +12,6 @@ import simd
 typealias Float2 = SIMD2<Float>
 typealias Float4 = SIMD4<Float>
 
-typealias Double2 = SIMD2<Double>
-typealias Double4 = SIMD4<Double>
-
 struct Vertex
 {
     var position:Float2

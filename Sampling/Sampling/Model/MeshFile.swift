@@ -23,20 +23,20 @@ extension UnsafeRawPointer
     }
 }
 
-class ModelFile
+class MeshFile
 {
     let name: String
     
     private var data: Data?
     private var address: UnsafeRawPointer?
     
-    private(set) var tangents: (UnsafeBufferPointer<Double4>, UnsafeBufferPointer<Int32>?)?
-    private(set) var normals: (UnsafeBufferPointer<Double4>, UnsafeBufferPointer<Int32>?)?
-    private(set) var colors: (UnsafeBufferPointer<Double4>, UnsafeBufferPointer<Int32>?)?
-    private(set) var uvs: (UnsafeBufferPointer<Double2>, UnsafeBufferPointer<Int32>?)?
+    private(set) var tangents: (UnsafeBufferPointer<Float4>, UnsafeBufferPointer<Int32>?)?
+    private(set) var normals: (UnsafeBufferPointer<Float4>, UnsafeBufferPointer<Int32>?)?
+    private(set) var colors: (UnsafeBufferPointer<Float4>, UnsafeBufferPointer<Int32>?)?
+    private(set) var uvs: (UnsafeBufferPointer<Float2>, UnsafeBufferPointer<Int32>?)?
     
     private(set) var triangles: UnsafeBufferPointer<Int32>?
-    private(set) var vertices: (UnsafeBufferPointer<Double4>, UnsafeBufferPointer<Int32>)?
+    private(set) var vertices: (UnsafeBufferPointer<Float4>, UnsafeBufferPointer<Int32>)?
     
     init(name: String)
     {
@@ -65,31 +65,31 @@ class ModelFile
         
         // control vertices
         assert(ptr++.load(as: UInt8.self) == 86) // V
-        var pi = ptr.bindMemory(to: Int32.self, capacity: 1)
-        let numVertices = Int(pi.pointee)
+        var pti = ptr.bindMemory(to: Int32.self, capacity: 1)
+        let numVertices = Int(pti.pointee)
         ptr += 4
         
-        let pv = ptr.bindMemory(to: Double4.self, capacity: numVertices)
-        let controlVertices = UnsafeBufferPointer<Double4>(start: pv, count: numVertices);
-        ptr += MemoryLayout<Double4>.stride * numVertices
+        let ptv = ptr.bindMemory(to: Float4.self, capacity: numVertices)
+        let controlVertices = UnsafeBufferPointer<Float4>(start: ptv, count: numVertices);
+        ptr += MemoryLayout<Float4>.stride * numVertices
         
         // triangles
         assert(ptr++.load(as: UInt8.self) == 84) // T
-        pi = ptr.bindMemory(to: Int32.self, capacity: 1)
-        let numTriangles = Int(pi.pointee)
+        pti = ptr.bindMemory(to: Int32.self, capacity: 1)
+        let numTriangles = Int(pti.pointee)
         ptr += 4
         
-        self.triangles = UnsafeBufferPointer<Int32>(start: pi + 1, count: numTriangles * 3)
+        self.triangles = UnsafeBufferPointer<Int32>(start: pti + 1, count: numTriangles * 3)
         ptr += MemoryLayout<Int32>.stride * numTriangles * 3
         
         // polygon vertices
         assert(ptr++.load(as: UInt8.self) == 80) // P
-        pi = ptr.bindMemory(to: Int32.self, capacity: 1)
-        let numPolygonVertices = Int(pi.pointee)
+        pti = ptr.bindMemory(to: Int32.self, capacity: 1)
+        let numPolygonVertices = Int(pti.pointee)
         ptr += 4
         
-        pi = ptr.bindMemory(to: Int32.self, capacity: numPolygonVertices)
-        let polygonVertices = UnsafeBufferPointer<Int32>(start: pi, count: numPolygonVertices)
+        pti = ptr.bindMemory(to: Int32.self, capacity: numPolygonVertices)
+        let polygonVertices = UnsafeBufferPointer<Int32>(start: pti, count: numPolygonVertices)
         self.vertices = (controlVertices, polygonVertices)
         ptr += MemoryLayout<Int32>.stride * numPolygonVertices;
         
@@ -99,8 +99,8 @@ class ModelFile
         let stop = address + data.count
         while ptr < stop
         {
-            let code = ptr++.load(as: UInt8.self)
-            switch code {
+            let type = ptr++.load(as: UInt8.self)
+            switch type {
             case 110: self.normals  = load(&ptr) // n: normals
             case 117: self.uvs      = load(&ptr) // u: uvs
             case 116: self.tangents = load(&ptr) // t: tangents
@@ -115,12 +115,12 @@ class ModelFile
         // DirectArray
         assert(ptr++.load(as: UInt8.self) == 100) // d
         
-        var pi = ptr.bindMemory(to: Int32.self, capacity: 1)
-        let numValues = Int(pi.pointee)
+        var pti = ptr.bindMemory(to: Int32.self, capacity: 1)
+        let numValues = Int(pti.pointee)
         ptr += 4
         
-        let pv = ptr.bindMemory(to: T.self, capacity: numValues)
-        let values = UnsafeBufferPointer<T>(start: pv, count: numValues)
+        let ptv = ptr.bindMemory(to: T.self, capacity: numValues)
+        let values = UnsafeBufferPointer<T>(start: ptv, count: numValues)
         ptr += MemoryLayout<T>.stride * numValues
         
         var indices: UnsafeBufferPointer<Int32>?
@@ -128,12 +128,12 @@ class ModelFile
         {
             // IndexArray
             assert(ptr++.load(as: UInt8.self) == 105) // i
-            pi = ptr.bindMemory(to: Int32.self, capacity: 1)
-            let numIndices = Int(pi.pointee)
+            pti = ptr.bindMemory(to: Int32.self, capacity: 1)
+            let numIndices = Int(pti.pointee)
             ptr += 4
             
-            pi = ptr.bindMemory(to: Int32.self, capacity: numIndices)
-            indices = UnsafeBufferPointer<Int32>(start: pi, count: numIndices)
+            pti = ptr.bindMemory(to: Int32.self, capacity: numIndices)
+            indices = UnsafeBufferPointer<Int32>(start: pti, count: numIndices)
             ptr += MemoryLayout<Int32>.stride * numIndices
         }
         
