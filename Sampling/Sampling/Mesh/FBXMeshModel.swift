@@ -68,9 +68,48 @@ struct MeshVertices
 
 class MeshModel
 {
-    let name: String
-    var bundle: Bundle?
+    let bundle:Bundle?
+    let device:MTLDevice
     
+    convenience init(device: MTLDevice)
+    {
+        self.init(bundle: Bundle.main, device: device)
+    }
+    
+    convenience init(bundle:String, device: MTLDevice)
+    {
+        if let path = Bundle.main.path(forResource: bundle, ofType: "bundle")
+        {
+            self.init(bundle: Bundle(path: path), device: device)
+        }
+        else
+        {
+            self.init(bundle: nil, device: device)
+        }
+    }
+    
+    init(bundle:Bundle?, device: MTLDevice)
+    {
+        self.bundle = bundle
+        self.device = device
+    }
+    
+    func newTexture(name:String, type:String)->MTLTexture?
+    {
+        guard let bundle = self.bundle else { return nil }
+        
+        let loader = MTKTextureLoader(device: device)
+        if let path = bundle.path(forResource: name, ofType: type)
+        {
+            return try? loader.newTexture(URL: URL(fileURLWithPath: path), options: [:])
+        }
+        
+        return nil
+    }
+}
+
+class FBXMeshModel: MeshModel
+{
     private var data: Data?
     private var address: UnsafeRawPointer?
     
@@ -90,63 +129,17 @@ class MeshModel
         indexing?.deallocate()
     }
     
-    init(name: String)
+    func load(name:String)
     {
-        self.name = name
-        self.bundle = nil
-        if let path = Bundle.main.path(forResource: name, ofType: "mesh")
+        if let bundle = self.bundle, let asset = bundle.path(forResource: name, ofType: "mesh")
         {
-            if let data = try? Data(contentsOf: URL(fileURLWithPath: path))
+            if let data = try? Data(contentsOf: URL(fileURLWithPath: asset))
             {
                 self.data = data
                 data.withUnsafeBytes { self.address = $0.baseAddress }
+                deserialize()
             }
         }
-        
-        load()
-    }
-    
-    init(bundle b: String, name: String)
-    {
-        self.name = name
-        if let path = Bundle.main.path(forResource: b, ofType: "bundle")
-        {
-            if let target = Bundle(path: path)
-            {
-                self.bundle = target
-                if let asset = target.path(forResource: name, ofType: "mesh")
-                {
-                    if let data = try? Data(contentsOf: URL(fileURLWithPath: asset))
-                    {
-                        self.data = data
-                        data.withUnsafeBytes { self.address = $0.baseAddress }
-                    }
-                }
-            }
-        }
-        
-        load()
-    }
-    
-    func getAssetURL(name: String, type:String)->URL?
-    {
-        let bundle: Bundle = self.bundle ?? Bundle.main
-        if let asset = bundle.path(forResource: name, ofType: type)
-        {
-            return URL(fileURLWithPath: asset)
-        }
-        
-        return nil
-    }
-    
-    func loadTexture(device: MTLDevice, name: String)->MTLTexture?
-    {
-        let loader = MTKTextureLoader(device: device)
-        if let url = getAssetURL(name: name, type: "png")
-        {
-            return try? loader.newTexture(URL: url, options: [:])
-        }
-        return nil
     }
     
     private func align(_ ptr:inout UnsafeRawPointer, base:UnsafeRawPointer, size: Int = 8)
@@ -159,7 +152,7 @@ class MeshModel
         }
     }
     
-    private func load()
+    private func deserialize()
     {
         guard let data = self.data, let address = self.address else {return}
         

@@ -9,41 +9,15 @@
 import Foundation
 import MetalKit
 
-class MTKMeshModel
+class MTKMeshModel: MeshModel
 {
-    let bundle:Bundle?
-    let device:MTLDevice
-    
     var mdlMeshes: [MDLMesh] = []
     var mtkMeshes: [MTKMesh] = []
     
-    convenience init(device: MTLDevice)
-    {
-        self.init(bundle: Bundle.main, device: device)
-    }
-    
-    convenience init(bundle:String, device: MTLDevice)
-    {
-        if let path = Bundle.main.path(forResource: bundle, ofType: "bundle")
-        {
-            self.init(bundle: Bundle(path: path), device: device)
-        }
-        else
-        {
-            self.init(bundle: nil, device: device)
-        }
-    }
-    
-    init(bundle:Bundle?, device: MTLDevice)
-    {
-        self.bundle = bundle
-        self.device = device
-    }
-    
-    func load(name:String, type: String, vertexDescriptor: MTLVertexDescriptor)->MTKMeshModel?
+    func load(name:String, type: String, vertexDescriptor: MTLVertexDescriptor)
     {
         guard let bundle = self.bundle else {
-            return nil
+            return
         }
         
         if let path = bundle.path(forResource: name, ofType: type)
@@ -71,11 +45,9 @@ class MTKMeshModel
             {
                 self.mdlMeshes = mdlMeshes
                 self.mtkMeshes = mtkMeshes
-                return self
+                return
             }
         }
-        
-        return nil
     }
     
 }

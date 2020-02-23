@@ -29,7 +29,6 @@ class MetalRenderer: NSObject
     var samplerState: MTLSamplerState?
     var commandQueue: MTLCommandQueue?
     var model: MeshModel?
-    var mtkModel: MTKMeshModel?
     var texture: MTLTexture?
     
     var delegate: MetalRendererDelegate?
@@ -44,6 +43,9 @@ class MetalRenderer: NSObject
         self.device = device
         self.delegate = RenderCase1()
         super.init()
+        
+        self.delegate?.prepare(self)
+        texture = model?.newTexture(name: "diffuse", type: "png")
         
         if let library = device.makeDefaultLibrary()
         {
@@ -64,15 +66,11 @@ class MetalRenderer: NSObject
         camera.target = [0, 0.8, 0]
         camera.distance = 4
         
-        model = MeshModel(bundle: "Punching", name: "body")
-        mtkModel = MTKMeshModel(bundle:"Punching", device: device).load(name: "body", type: "obj", vertexDescriptor: delegate!.createVertexDescriptor(self))
-        texture = model?.loadTexture(device: device, name: "diffuse")
-        
         samplerState = createSamplerState()
         depthStencilState = delegate?.createDepthStencilState(self)
         
         assert(pipelineState != nil)
-        self.delegate?.prepare(self)
+        
     }
     
     func createSamplerState()->MTLSamplerState?
@@ -112,7 +110,9 @@ class RenderCase2: MetalRendererDelegate
 {
     func prepare(_ r: MetalRenderer)
     {
-        
+        let model = MTKMeshModel(bundle: "Punching", device: r.device)
+        model.load(name: "body", type: "obj", vertexDescriptor: createVertexDescriptor(r))
+        r.model = model
     }
     
     func createVertexDescriptor(_ r: MetalRenderer) -> MTLVertexDescriptor
@@ -146,7 +146,7 @@ class RenderCase2: MetalRendererDelegate
     
     func encodeCommands(_ r: MetalRenderer, encoder: MTLRenderCommandEncoder)
     {
-        if let mtkMesh = r.mtkModel?.mtkMeshes.first,
+        if let model = r.model as? MTKMeshModel, let mtkMesh = model.mtkMeshes.first,
             let vertices = mtkMesh.vertexBuffers.first?.buffer,
             let submesh = mtkMesh.submeshes.first
         {
@@ -172,7 +172,11 @@ class RenderCase1: MetalRendererDelegate
 {
     func prepare(_ r: MetalRenderer)
     {
-        if let uvs = r.model?.uvs?.controls, var iter = uvs.baseAddress
+        let model = FBXMeshModel(bundle: "Punching", device: r.device)
+        model.load(name: "body")
+        r.model = model
+        
+        if let uvs = model.uvs?.controls, var iter = uvs.baseAddress
         {
             for _ in 0..<uvs.count
             {
@@ -215,7 +219,7 @@ class RenderCase1: MetalRendererDelegate
     
     func encodeCommands(_ r: MetalRenderer, encoder: MTLRenderCommandEncoder)
     {
-        if let model = r.model, let vertices = model.vertices?.controlVertices, let indices = model.indexing
+        if let model = r.model as? FBXMeshModel, let vertices = model.vertices?.controlVertices, let indices = model.indexing
         {
             var transform = Transform()
             transform.rotation.y = Float.pi
