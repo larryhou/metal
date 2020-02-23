@@ -10,7 +10,6 @@
 		6B09BB6123FB0183002AB46F /* shader.metal in Sources */ = {isa = PBXBuildFile; fileRef = 6B09BB5F23FB0183002AB46F /* shader.metal */; };
 		6B09BB6223FB0183002AB46F /* MetalRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B09BB6023FB0183002AB46F /* MetalRenderer.swift */; };
 		6B09BB6C23FB800E002AB46F /* Punching.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 6B09BB6A23FB800E002AB46F /* Punching.bundle */; };
-		6B09BB6D23FB800E002AB46F /* Piggy.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 6B09BB6B23FB800E002AB46F /* Piggy.bundle */; };
 		6B28FF8A23FADB5F00E6CBE9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B28FF8923FADB5F00E6CBE9 /* AppDelegate.swift */; };
 		6B28FF8C23FADB5F00E6CBE9 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B28FF8B23FADB5F00E6CBE9 /* SceneDelegate.swift */; };
 		6B28FF8E23FADB5F00E6CBE9 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B28FF8D23FADB5F00E6CBE9 /* ViewController.swift */; };
@@ -19,6 +18,10 @@
 		6B28FF9623FADB6000E6CBE9 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6B28FF9423FADB6000E6CBE9 /* LaunchScreen.storyboard */; };
 		6B28FFA123FADB6000E6CBE9 /* SamplingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B28FFA023FADB6000E6CBE9 /* SamplingTests.swift */; };
 		6B28FFBC23FADE1000E6CBE9 /* MeshModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B28FFBB23FADE1000E6CBE9 /* MeshModel.swift */; };
+		6BC7242123FE6076009C33ED /* Transform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BC7241E23FE6075009C33ED /* Transform.swift */; };
+		6BC7242223FE6076009C33ED /* Camera.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BC7241F23FE6075009C33ED /* Camera.swift */; };
+		6BC7242323FE6076009C33ED /* MathLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BC7242023FE6075009C33ED /* MathLibrary.swift */; };
+		6BC7244A24010326009C33ED /* MTKMeshModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BC7244924010326009C33ED /* MTKMeshModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -35,7 +38,6 @@
 		6B09BB5F23FB0183002AB46F /* shader.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; path = shader.metal; sourceTree = "<group>"; };
 		6B09BB6023FB0183002AB46F /* MetalRenderer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MetalRenderer.swift; sourceTree = "<group>"; };
 		6B09BB6A23FB800E002AB46F /* Punching.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Punching.bundle; sourceTree = "<group>"; };
-		6B09BB6B23FB800E002AB46F /* Piggy.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Piggy.bundle; sourceTree = "<group>"; };
 		6B28FF8623FADB5F00E6CBE9 /* Sampling.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Sampling.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6B28FF8923FADB5F00E6CBE9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		6B28FF8B23FADB5F00E6CBE9 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -48,6 +50,11 @@
 		6B28FFA023FADB6000E6CBE9 /* SamplingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SamplingTests.swift; sourceTree = "<group>"; };
 		6B28FFA223FADB6000E6CBE9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6B28FFBB23FADE1000E6CBE9 /* MeshModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeshModel.swift; sourceTree = "<group>"; };
+		6BC7241D23FE5EEE009C33ED /* common.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = common.h; sourceTree = "<group>"; };
+		6BC7241E23FE6075009C33ED /* Transform.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Transform.swift; sourceTree = "<group>"; };
+		6BC7241F23FE6075009C33ED /* Camera.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Camera.swift; sourceTree = "<group>"; };
+		6BC7242023FE6075009C33ED /* MathLibrary.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MathLibrary.swift; sourceTree = "<group>"; };
+		6BC7244924010326009C33ED /* MTKMeshModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MTKMeshModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -72,6 +79,7 @@
 			isa = PBXGroup;
 			children = (
 				6B09BB5F23FB0183002AB46F /* shader.metal */,
+				6BC7241D23FE5EEE009C33ED /* common.h */,
 				6B09BB6023FB0183002AB46F /* MetalRenderer.swift */,
 			);
 			name = Metal;
@@ -106,6 +114,9 @@
 				6B28FF8B23FADB5F00E6CBE9 /* SceneDelegate.swift */,
 				6B28FF8D23FADB5F00E6CBE9 /* ViewController.swift */,
 				6B28FF8F23FADB5F00E6CBE9 /* Main.storyboard */,
+				6BC7241F23FE6075009C33ED /* Camera.swift */,
+				6BC7242023FE6075009C33ED /* MathLibrary.swift */,
+				6BC7241E23FE6075009C33ED /* Transform.swift */,
 				6B28FF9223FADB6000E6CBE9 /* Assets.xcassets */,
 				6B28FF9423FADB6000E6CBE9 /* LaunchScreen.storyboard */,
 				6B28FF9723FADB6000E6CBE9 /* Info.plist */,
@@ -126,6 +137,7 @@
 			isa = PBXGroup;
 			children = (
 				6B28FFBB23FADE1000E6CBE9 /* MeshModel.swift */,
+				6BC7244924010326009C33ED /* MTKMeshModel.swift */,
 			);
 			path = Mesh;
 			sourceTree = "<group>";
@@ -133,7 +145,6 @@
 		6B28FFBD23FAE37E00E6CBE9 /* Assets */ = {
 			isa = PBXGroup;
 			children = (
-				6B09BB6B23FB800E002AB46F /* Piggy.bundle */,
 				6B09BB6A23FB800E002AB46F /* Punching.bundle */,
 			);
 			path = Assets;
@@ -221,7 +232,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				6B28FF9623FADB6000E6CBE9 /* LaunchScreen.storyboard in Resources */,
-				6B09BB6D23FB800E002AB46F /* Piggy.bundle in Resources */,
 				6B28FF9323FADB6000E6CBE9 /* Assets.xcassets in Resources */,
 				6B28FF9123FADB5F00E6CBE9 /* Main.storyboard in Resources */,
 				6B09BB6C23FB800E002AB46F /* Punching.bundle in Resources */,
@@ -242,9 +252,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6BC7242223FE6076009C33ED /* Camera.swift in Sources */,
 				6B28FF8E23FADB5F00E6CBE9 /* ViewController.swift in Sources */,
+				6BC7242323FE6076009C33ED /* MathLibrary.swift in Sources */,
 				6B28FF8A23FADB5F00E6CBE9 /* AppDelegate.swift in Sources */,
 				6B09BB6223FB0183002AB46F /* MetalRenderer.swift in Sources */,
+				6BC7244A24010326009C33ED /* MTKMeshModel.swift in Sources */,
+				6BC7242123FE6076009C33ED /* Transform.swift in Sources */,
 				6B28FFBC23FADE1000E6CBE9 /* MeshModel.swift in Sources */,
 				6B28FF8C23FADB5F00E6CBE9 /* SceneDelegate.swift in Sources */,
 				6B09BB6123FB0183002AB46F /* shader.metal in Sources */,
@@ -416,6 +430,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.larryhou.Sampling;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = Sampling/Metal/common.h;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -434,6 +449,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.larryhou.Sampling;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = Sampling/Metal/common.h;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};

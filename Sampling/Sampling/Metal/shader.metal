@@ -7,35 +7,40 @@
 //
 
 #include <metal_stdlib>
+#import "common.h"
+
 using namespace metal;
 
 struct Vertex
 {
-    float2 position;
-    float4 color;
+    float4 position [[attribute(0)]];
+    float4 normal [[attribute(1)]];
+    float2 uv [[attribute(2)]];
 };
 
 struct VertexOutput
 {
     float4 position [[position]];
+    float4 worldPosition;
+    float4 worldNormal;
     float4 color;
+    float2 uv;
 };
 
-vertex VertexOutput vert(uint vertex_id [[vertex_id]],
-                         constant Vertex *vertices [[buffer(0)]],
-                         constant float2 *viewport [[buffer(1)]])
+vertex VertexOutput vert(Vertex data [[stage_in]],
+                         constant MetalUniforms &uniforms [[buffer(10)]])
 {
-    float2 position = vertices[vertex_id].position.xy;
-    float2 vp = float2(*viewport);
-    
     VertexOutput out;
-    out.position = float4(0, 0, 0, 1);
-    out.position.xy = position / (vp / 2.0);
-    out.color = vertices[vertex_id].color;
+    out.position = uniforms.projection * uniforms.view * uniforms.model * data.position;
+    out.worldPosition = uniforms.model * data.position;
+    out.worldNormal = uniforms.model * data.normal;
+    out.uv = data.uv;
     return out;
 }
 
-fragment float4 frag(VertexOutput in [[stage_in]])
+fragment float4 frag(VertexOutput in [[stage_in]],
+                     texture2d<float> texture [[texture(0)]],
+                     sampler sampler2d [[sampler(0)]])
 {
-    return in.color;
+    return texture.sample(sampler2d, in.uv) * 3;
 }

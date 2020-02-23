@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import MetalKit
 
 extension UnsafeRawPointer
 {
@@ -68,7 +69,7 @@ struct MeshVertices
 class MeshModel
 {
     let name: String
-    let bundle: String?
+    var bundle: Bundle?
     
     private var data: Data?
     private var address: UnsafeRawPointer?
@@ -107,13 +108,12 @@ class MeshModel
     
     init(bundle b: String, name: String)
     {
-        self.bundle = b
         self.name = name
-        
         if let path = Bundle.main.path(forResource: b, ofType: "bundle")
         {
             if let target = Bundle(path: path)
             {
+                self.bundle = target
                 if let asset = target.path(forResource: name, ofType: "mesh")
                 {
                     if let data = try? Data(contentsOf: URL(fileURLWithPath: asset))
@@ -126,6 +126,27 @@ class MeshModel
         }
         
         load()
+    }
+    
+    func getAssetURL(name: String, type:String)->URL?
+    {
+        let bundle: Bundle = self.bundle ?? Bundle.main
+        if let asset = bundle.path(forResource: name, ofType: type)
+        {
+            return URL(fileURLWithPath: asset)
+        }
+        
+        return nil
+    }
+    
+    func loadTexture(device: MTLDevice, name: String)->MTLTexture?
+    {
+        let loader = MTKTextureLoader(device: device)
+        if let url = getAssetURL(name: name, type: "png")
+        {
+            return try? loader.newTexture(URL: url, options: [:])
+        }
+        return nil
     }
     
     private func align(_ ptr:inout UnsafeRawPointer, base:UnsafeRawPointer, size: Int = 8)
